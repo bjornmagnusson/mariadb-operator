@@ -55,21 +55,7 @@ jobs:
       - run: 
           name: Bootstrap KinD cluster
           command: |
-            apk add --no-cache curl make go
-            echo "---------------------"
-            echo "Installing Kustomize"
-            opsys=linux
-            curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases |\
-              grep browser_download |\
-              grep $opsys |\
-              cut -d '"' -f 4 |\
-              grep /kustomize/v |\
-              sort | tail -n 1 |\
-              xargs curl -O -L
-            tar xzf ./kustomize_v*_${opsys}_amd64.tar.gz
-            mv ./kustomize $HOME
-            export PATH=$PATH:$HOME
-            kustomize version
+            apk add --no-cache curl
             echo "---------------------"
             echo "Installing Kind"
             curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.6.0/kind-$(uname)-amd64
@@ -77,11 +63,7 @@ jobs:
             mv ./kind $HOME/kind
             export PATH=$PATH:$HOME
             kind version
-            kind create cluster     
-      - run:
-          name: Deploy to cluster
-          command: |
-            make deploy IMG=${DOCKER_IMAGE}:${CIRCLE_SHA1}
+            kind create cluster
 workflows:
   version: 2
   build:
