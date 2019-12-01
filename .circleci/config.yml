@@ -47,12 +47,12 @@ jobs:
       - run: 
           name: Build Docker image
           command: |
-            make docker-build IMG=${DOCKER_IMAGE}:${CIRCLE_SHA1}
+            docker image build . -t ${DOCKER_IMAGE}:${CIRCLE_SHA1}
             if [[ ! -z "${CIRCLE_TAG}" ]]; then
-              make docker-build IMG=${DOCKER_IMAGE}:${CIRCLE_TAG}
+              docker image build . -t ${DOCKER_IMAGE}:${CIRCLE_TAG}
             fi
             if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-              make docker-build IMG=${DOCKER_IMAGE}:canary
+              docker image build . -t ${DOCKER_IMAGE}:canary
             fi
       - deploy:
           name: Push Docker image
@@ -67,3 +67,5 @@ workflows:
           context: DOCKER_HUB
       - docker:  
           context: DOCKER_HUB
+          requires:
+            - build
