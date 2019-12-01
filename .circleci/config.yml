@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.13
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    steps:
+      - checkout
+      - run: 
+          name: Build
+          command: make test
+
+  docker:
+    docker:
+      - image: docker:stable-git
+        environment:
+          DOCKER_IMAGE: bjornmagnusson/mariadb-operator
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    steps:
+      - setup_remote_docker:
+          version: 18.09.3
+      - run: 
+          name: Build Docker image
+          command: |
+            make docker-build IMG=${DOCKER_IMAGE}:${CIRCLE_SHA1}
+            if [[ ! -z "${CIRCLE_TAG}" ]]; then
+              make docker-build IMG=${DOCKER_IMAGE}:${CIRCLE_TAG}
+            fi
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+              make docker-build IMG=${DOCKER_IMAGE}:canary
+            fi
+      - deploy:
+          name: Push Docker image
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker image push ${DOCKER_IMAGE_NAME}  
