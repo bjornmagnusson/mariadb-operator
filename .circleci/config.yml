@@ -55,7 +55,7 @@ jobs:
       - run: 
           name: Bootstrap KinD cluster
           command: |
-            apk add --no-cache curl make
+            apk add --no-cache curl make go
             echo "---------------------"
             echo "Installing Kustomize"
             opsys=linux
