@@ -1,0 +1,26 @@
+# permissions to do edit databaseservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: databaseserver-editor-role
+rules:
+- apiGroups:
+  - mariadb.bjornmagnusson.com
+  resources:
+  - databaseservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - mariadb.bjornmagnusson.com
+  resources:
+  - databaseservers/status
+  verbs:
+  - get
+  - patch
+  - update

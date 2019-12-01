@@ -1,0 +1,7 @@
+domain: bjornmagnusson.com
+repo: github.com/bjornmagnusson/mariadb-operator
+resources:
+- group: mariadb
+  kind: DatabaseServer
+  version: v1beta1
+version: "2"

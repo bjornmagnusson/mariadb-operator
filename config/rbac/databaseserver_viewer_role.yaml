@@ -1,0 +1,20 @@
+# permissions to do viewer databaseservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: databaseserver-viewer-role
+rules:
+- apiGroups:
+  - mariadb.bjornmagnusson.com
+  resources:
+  - databaseservers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - mariadb.bjornmagnusson.com
+  resources:
+  - databaseservers/status
+  verbs:
+  - get

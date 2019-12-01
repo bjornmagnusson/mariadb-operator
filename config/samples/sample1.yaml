@@ -1,0 +1,13 @@
+apiVersion: mariadb.bjornmagnusson.com/v1beta1
+kind: DatabaseServer
+metadata:
+  name: databaseserver-sample
+spec:
+  name: sample
+  image: mariadb:10.1
+  port: 3306
+  password: root
+  databases:
+  - name: database1
+  - name: database2
+  - name: database3
