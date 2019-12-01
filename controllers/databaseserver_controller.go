@@ -54,6 +54,8 @@ type DatabaseServerReconciler struct {
 
 // +kubebuilder:rbac:groups=mariadb.bjornmagnusson.com,resources=databaseservers,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=mariadb.bjornmagnusson.com,resources=databaseservers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=*,resources=pods,verbs=get;list
+// +kubebuilder:rbac:groups=*,resources=pods/exec,verbs=create
 
 func (r *DatabaseServerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()

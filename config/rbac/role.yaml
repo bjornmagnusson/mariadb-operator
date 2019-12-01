@@ -7,6 +7,19 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - '*'
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - '*'
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
   - mariadb.bjornmagnusson.com
   resources:
   - databaseservers
