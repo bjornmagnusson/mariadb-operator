@@ -11,3 +11,4 @@ spec:
   - name: database1
   - name: database2
   - name: database3
+  - name: database4

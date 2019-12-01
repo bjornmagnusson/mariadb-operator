@@ -60,6 +60,15 @@ jobs:
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker image push ${DOCKER_IMAGE}
+      - run: 
+          name: Bootstrap KinD cluster
+          command: |
+            curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.6.0/kind-$(uname)-amd64
+            chmod +x ./kind
+            mv ./kind $HOME/kind
+            export PATH=$PATH:$HOME
+            kind version
+            kind create cluster     
 workflows:
   version: 2
   build:
