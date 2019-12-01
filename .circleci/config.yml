@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.13
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    working_directory: /go/src/github.com/bjornmagnusson/mariadb-operator
     steps:
       - checkout
       - run: 
@@ -31,9 +31,9 @@ jobs:
             export PATH=$PATH:$HOME
             kustomize version
       - run:
-          name: Build and Test
+          name: Build
           command: |
-            make test
+            make
 
   docker:
     docker:
