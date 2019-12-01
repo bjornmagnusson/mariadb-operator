@@ -7,14 +7,14 @@ jobs:
     steps:
       - checkout
       - run: 
-          name: Build
+          name: Bootstrap
           command: |
             echo "Installing KubeBuilder"
             os=$(go env GOOS)
             arch=$(go env GOARCH)
             curl -sL https://go.kubebuilder.io/dl/2.2.0/${os}/${arch} | tar -xz -C /tmp/
-            mv /tmp/kubebuilder_2.2.0_${os}_${arch} /$HOME/kubebuilder
-            export PATH=$PATH:/$HOME/kubebuilder/bin
+            mv /tmp/kubebuilder_2.2.0_${os}_${arch} $HOME/kubebuilder
+            export PATH=$PATH:$HOME/kubebuilder/bin
             kubebuilder version
 
             echo "Installing Kustomize"
@@ -27,9 +27,12 @@ jobs:
               sort | tail -n 1 |\
               xargs curl -O -L
             tar xzf ./kustomize_v*_${opsys}_amd64.tar.gz
-            mv ./kustomize /$HOME/
+            mv ./kustomize $HOME
+            export PATH=$PATH:$HOME
             kustomize version
-
+      - run:
+          name: Build and Test
+          command: |
             make test
 
   docker:
