@@ -9,14 +9,6 @@ jobs:
       - run: 
           name: Bootstrap
           command: |
-            echo "Installing KubeBuilder"
-            os=$(go env GOOS)
-            arch=$(go env GOARCH)
-            curl -sL https://go.kubebuilder.io/dl/2.2.0/${os}/${arch} | tar -xz -C /tmp/
-            mv /tmp/kubebuilder_2.2.0_${os}_${arch} $HOME/kubebuilder
-            export PATH=$PATH:$HOME/kubebuilder/bin
-            kubebuilder version
-
             echo "Installing Kustomize"
             opsys=linux
             curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases |\
@@ -63,13 +55,33 @@ jobs:
       - run: 
           name: Bootstrap KinD cluster
           command: |
-            apk add --no-cache curl
+            apk add --no-cache curl make
+            echo "---------------------"
+            echo "Installing Kustomize"
+            opsys=linux
+            curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases |\
+              grep browser_download |\
+              grep $opsys |\
+              cut -d '"' -f 4 |\
+              grep /kustomize/v |\
+              sort | tail -n 1 |\
+              xargs curl -O -L
+            tar xzf ./kustomize_v*_${opsys}_amd64.tar.gz
+            mv ./kustomize $HOME
+            export PATH=$PATH:$HOME
+            kustomize version
+            echo "---------------------"
+            echo "Installing Kind"
             curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.6.0/kind-$(uname)-amd64
             chmod +x ./kind
             mv ./kind $HOME/kind
             export PATH=$PATH:$HOME
             kind version
             kind create cluster     
+      - run:
+          name: Deploy to cluster
+          command: |
+            make deploy IMG=${DOCKER_IMAGE}:${CIRCLE_SHA1}
 workflows:
   version: 2
   build:
